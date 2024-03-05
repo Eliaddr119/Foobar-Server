@@ -1,9 +1,9 @@
 import express from "express";
-import {getAllPosts,getPost,createNewPost,updateExistingPost,removePost} from "../controllers/posts.js";
+import { getPosts, getPost, createNewPost, updateExistingPost, removePost } from "../controllers/posts.js";
 
 const router = express.Router();
 
-router.get("/", getAllPosts);
+router.get("/", getPosts);
 
 router.get("/:id", getPost);
 

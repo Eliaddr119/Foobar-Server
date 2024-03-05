@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-function generateToken(user, password) {
+function generateToken(username) {
   // Generate the token using the user and password
-  const token = jwt.sign({ user, password }, 'secretKey', { expiresIn: '1h' });
+  const token = jwt.sign({ username }, 'foo', { expiresIn: '1h' });
   return token;
 }
 
 export {
-    generateToken
+  generateToken
 }
