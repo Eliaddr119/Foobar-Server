@@ -28,7 +28,7 @@ import tokenRouter from "./routes/token.js";
 
 server.use("/api/posts", postsRouter);
 server.use("/api/users", usersRouter);
-server.use("/api/token", tokenRouter);
+server.use("/api/tokens", tokenRouter);
 // server.use("/" , )
 // server.get("/", (req, res) => {
 //     res.send("Hello World");
