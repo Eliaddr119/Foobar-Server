@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 const getPosts = async (req, res) => {
     try {
-        const token = req.headers.authorization;
+        const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, 'foo');
         const username = decodedToken.username;
         const posts = await postService.getPosts(username);
