@@ -36,7 +36,7 @@ const updateUser = async (username, password, profilePic, friends, friendsReques
 }
 
 const deleteUser = async (username) => {
-    await User.findOneAndDelete({ username: username });
+    return await User.findOneAndDelete({ username: username });
 }
 
 const addFriend = async (username, friend) => {
