@@ -2,8 +2,8 @@ import express from "express";
 var server = express();
 
 import bodyParser from "body-parser";
-server.use(bodyParser.json({ limit: '1mb' }));
-server.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
+server.use(bodyParser.json({ limit: '5mb' }));
+server.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 import cors from "cors";
 server.use(cors());
 

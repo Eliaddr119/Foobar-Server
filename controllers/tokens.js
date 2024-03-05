@@ -4,7 +4,8 @@ import userServices from '../services/users.js';
 
 const getToken = async (req, res) => {
     try {
-        const {username, password } = req.body;
+        const username = req.body.username;
+        const password = req.body.password;
         const user = await userServices.getUser(username);
         // Check if the user exists
         if (!user) {
