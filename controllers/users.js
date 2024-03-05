@@ -1,4 +1,3 @@
-import e from 'express';
 import userServices from '../services/users.js';
 import jwt from 'jsonwebtoken';
 
@@ -14,6 +13,10 @@ const getUser = async (req, res) => {
 const createNewUser = async (req, res) => {
     try{
         const { username, password, displayName, profilePic, friends, friendsRequest } = req.body;
+        const existingUser = await userServices.getUser(username);
+        if (existingUser) {
+            throw new Error("Username already exists")
+        }
         const user = await userServices.createUser(username, password, displayName, profilePic, friends, friendsRequest);
         res.status(201).json(user);
     }catch(error){
@@ -25,6 +28,9 @@ const updateExistingUser = async (req, res) => {
     try{
         const { username, password, profilePic, friends, friendsRequest } = req.body;
         const user = await userServices.updateUser(username, password, profilePic, friends, friendsRequest);
+        if (!user) { 
+           throw new Error("No user found with this id");
+        }
         res.status(200).json(user);
     }catch(error){
         res.status(409).json({ message: error.message });
@@ -33,7 +39,10 @@ const updateExistingUser = async (req, res) => {
 
 const removeUser = async (req, res) => {
     try{
-        await userServices.deleteUser(req.params.id);
+        const user = await userServices.deleteUser(req.params.id);
+        if (!user) {
+            throw new Error("No user found with this id");
+        }
         res.status(200).json({ message: "User deleted successfully" });
     }catch(error){
         res.status(404).json({ message: error.message });

@@ -2,8 +2,8 @@ import express from "express";
 var server = express();
 
 import bodyParser from "body-parser";
-server.use(bodyParser.urlencoded({ extended: true }));
-
+server.use(bodyParser.json({ limit: '1mb' }));
+server.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 import cors from "cors";
 server.use(cors());
 
@@ -29,10 +29,10 @@ import tokenRouter from "./routes/token.js";
 server.use("/api/posts", postsRouter);
 server.use("/api/users", usersRouter);
 server.use("/api/token", tokenRouter);
-
-server.get("/", (req, res) => {
-    res.send("Hello World");
-});
+// server.use("/" , )
+// server.get("/", (req, res) => {
+//     res.send("Hello World");
+// });
 
 server.listen(8080, () => {
     console.log("Server is running on port 8080 ");
