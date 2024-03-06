@@ -3,13 +3,17 @@ import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const Post = new schema({
-    id: Number,
+    id: String,
     username: {
         type: String,
         required: true
     },
     displayName:
     {
+        type: String,
+        required: true
+    },
+    profilePic: {
         type: String,
         required: true
     },

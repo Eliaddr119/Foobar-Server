@@ -19,7 +19,7 @@ const UserSchema = new schema({
     },
     profilePic: {
         type: String,
-        // required: true
+        required: true
     },
     friends: {
         type: [String],
