@@ -206,6 +206,19 @@ const createPost = async (id,username, displayName, profilePic, date, content, n
     return await post.save();
 }
 
+const getUserPosts = async (friend, username) => {
+    const friendUser = await User.findOne({ username: friend });
+    const user = await User.findOne({ username: username });
+    if (!friendUser) {
+        throw new Error("User not found");
+    }
+    if (friendUser.friends.includes(username) || friendUser.username === username) {
+        return await Post.find({ username: friend });
+    }else {
+        throw new Error("You are not friends with this user");
+    }
+}
+
 export default {
     getUser,
     getUserByDisplayName,
@@ -219,5 +232,6 @@ export default {
     updatePostUser,
     deletePostUser,
     getFriendList,
-    createPost
+    createPost,
+    getUserPosts
 }
