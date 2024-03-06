@@ -106,9 +106,9 @@ const addFriend = async (req, res) => {
 
 const updatePostUser = async (req, res) => {
     try {
-        const { username, displayName, date, content, numlikes, likeby, image } = req.body;
-        const user = await userServices.updatePostUser(req.params.id, req.params.pid, username,
-             displayName, date, content, numlikes, likeby, image);
+        const { content, image } = req.body;
+        const postid = req.params.pid;
+        const user = await userServices.updatePostUser(postid ,content, image);
         res.status(200).json(user);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -117,7 +117,9 @@ const updatePostUser = async (req, res) => {
 
 const deletePostUser = async (req, res) => {
     try {
-        const user = await userServices.deletePostUser(req.params.id, req.params.pid);
+        const username = req.params.id;
+        const postid = req.params.pid;
+        const user = await userServices.deletePostUser(username, postid);
         res.status(200).json(user);
     } catch (error) {
         res.status(409).json({ message: error.message });

@@ -151,32 +151,28 @@ const rejectFriendRequest = async (username, friend) => {
     return await user.save();
 }
 
-const updatePostUser = async (username, postId, displayName, date, content, likeby, numlikes, image) => {
-    const post = await Post.findOne({ id: postId });
+const updatePostUser = async (postid, content, image ) => {
+    const post = await Post.findOne({ id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
     if (post.username !== username) {
         throw new Error("You can only update your own post");
     }
-    post.displayName = displayName;
-    post.date = date;
     post.content = content;
-    post.likeby = likeby;
-    post.numlikes = numlikes;
     post.image = image;
     return await post.save();
 }
 
-const deletePostUser = async (username, postId) => {
-    const post = await Post.findOne({ id: postId });
+const deletePostUser = async (username, postid) => {
+    const post = await Post.findOne({ id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
     if (post.username !== username) {
         throw new Error("You can only delete your own post");
     }
-    return await Post.findOneAndDelete({ id: postId });
+    return await Post.findOneAndDelete({ id: postid });
 }
 
 const getFriendList = async (friend, username) => {
@@ -190,8 +186,11 @@ const getFriendList = async (friend, username) => {
         throw new Error("You are not friends with this user");
     }
 }
-const createPost = async (username, displayName, profilePic, date, content, numlikes, likeby, image) => {
-    const post = new Post({ username, displayName, profilePic, content });
+const createPost = async (id,username, displayName, profilePic, date, content, numlikes, likeby, image) => {
+    const post = new Post({username, displayName, profilePic, content });
+    if (id) {
+        post.id = id;
+    }
     if (date) {
         post.date = date;
     }
