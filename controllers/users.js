@@ -150,6 +150,19 @@ const createPost = async (req, res) => {
     }
 }
 
+const getUserPosts = async (req, res) => {
+    try {
+        token = req.headers.authorization.split(" ")[1];
+        const decodedData = jwt.verify(token, 'foo');
+        const username = decodedData.username;
+        const friend = req.params.id;
+        const userPosts = await userServices.getUserPosts(friend, username);
+        res.status(200).json(userPosts);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
 export {
     getUser,
     getUserByDisplayName,
@@ -163,5 +176,6 @@ export {
     updatePostUser,
     deletePostUser,
     getUserFriends,
-    createPost
+    createPost,
+    getUserPosts
 }
