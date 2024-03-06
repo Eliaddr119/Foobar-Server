@@ -219,6 +219,41 @@ const getUserPosts = async (friend, username) => {
     }
 }
 
+const addlike = async (username, postid) => {
+    const post = await Post.findOne({ id: postid });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    if (post.likeby.includes(username)) {
+        throw new Error("You have already liked this post");
+    }
+    post.numlikes += 1;
+    post.likeby.push(username);
+    return await post.save();
+}
+
+const removeLike = async (username, postid) => {
+    const post = await Post.findOne({ id: postid });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    const index = post.likeby.indexOf(username);
+    if (index === -1) {
+        throw new Error("You have not liked this post");
+    }
+    post.numlikes -= 1;
+    post.likeby.splice(index, 1);
+    return await post.save();
+}
+
+const getLikeList = async (postid) => {
+    const post = await Post.findOne({ id: postid });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    return post.likeby;
+}
+
 export default {
     getUser,
     getUserByDisplayName,
@@ -233,5 +268,8 @@ export default {
     deletePostUser,
     getFriendList,
     createPost,
-    getUserPosts
+    getUserPosts,
+    addlike,
+    removeLike,
+    getLikeList
 }

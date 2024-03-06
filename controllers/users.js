@@ -109,8 +109,8 @@ const updatePostUser = async (req, res) => {
         const { content, image } = req.body;
         const postid = req.params.pid;
         const username = req.params.id;
-        const user = await userServices.updatePostUser(username, postid, content, image);
-        res.status(200).json(user);
+        const post = await userServices.updatePostUser(username, postid, content, image);
+        res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -164,6 +164,37 @@ const getUserPosts = async (req, res) => {
     }
 }
 
+const addlike = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const username = req.params.id;
+        const post = await userServices.addlike(username, postid);
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
+const removeLike = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const username = req.params.id;
+        const post = await userServices.removeLike(username, postid);
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+const getLikeList = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const likeList = await userServices.getLikeList(postid);
+        res.status(200).json(likeList);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
 export {
     getUser,
     getUserByDisplayName,
@@ -178,5 +209,8 @@ export {
     deletePostUser,
     getUserFriends,
     createPost,
-    getUserPosts
+    getUserPosts,
+    addlike,
+    removeLike,
+    getLikeList
 }

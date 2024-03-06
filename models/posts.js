@@ -27,10 +27,16 @@ const Post = new schema({
         type: String,
         required: true
     },
-    // comments: {
-    //     type: [String],
-    //     default: []
-    // },
+    // comments: [{
+    //     text: {
+    //         type: String,
+    //         required: true
+    //     },
+    //     author: {
+    //         type: String,
+    //         required: true
+    //     }
+    // }],
     numlikes: {
         type: Number,
         default: 0
