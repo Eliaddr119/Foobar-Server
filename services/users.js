@@ -151,7 +151,7 @@ const rejectFriendRequest = async (username, friend) => {
     return await user.save();
 }
 
-const updatePostUser = async (postid, content, image ) => {
+const updatePostUser = async (username, postid, content, image ) => {
     const post = await Post.findOne({ id: postid });
     if (!post) {
         throw new Error("Post not found");

@@ -108,7 +108,8 @@ const updatePostUser = async (req, res) => {
     try {
         const { content, image } = req.body;
         const postid = req.params.pid;
-        const user = await userServices.updatePostUser(postid ,content, image);
+        const username = req.params.id;
+        const user = await userServices.updatePostUser(username, postid, content, image);
         res.status(200).json(user);
     } catch (error) {
         res.status(409).json({ message: error.message });
