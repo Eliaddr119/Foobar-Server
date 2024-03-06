@@ -219,5 +219,6 @@ export default {
     rejectFriendRequest,
     updatePostUser,
     deletePostUser,
-    getFriendList
+    getFriendList,
+    createPost
 }

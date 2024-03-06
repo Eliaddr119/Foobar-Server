@@ -160,5 +160,6 @@ export {
     addFriend,
     updatePostUser,
     deletePostUser,
-    getUserFriends
+    getUserFriends,
+    createPost
 }
