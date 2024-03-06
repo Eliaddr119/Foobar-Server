@@ -11,7 +11,7 @@ const getUserByDisplayName = async (displayName) => {
 }
 
 const createUser = async (username, password, displayName, profilePic, friends, friendsRequest) => {
-    if (await User.find({ username: username })) {
+    if (await User.findOne({ username: username })) {
         throw new Error("Username already exists");
     }
     const user = new User({ username, password, displayName, profilePic });

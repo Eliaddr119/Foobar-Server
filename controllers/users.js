@@ -140,9 +140,9 @@ const getUserFriends = async (req, res) => {
 }
 const createPost = async (req, res) => {
     try {
-        const { username, displayName, profilePic, date, content, numlikes, likeby, image } = req.body;
-        const user = await userServices.createPost(username, displayName, profilePic, date, content, numlikes, likeby, image);
-        res.status(200).json(user);
+        const {id, username, displayName, profilePic, date, content, numlikes, likeby, image } = req.body;
+        const post = await userServices.createPost(id, username, displayName, profilePic, date, content, numlikes, likeby, image);
+        res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }

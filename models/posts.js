@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const Post = new schema({
-    id: String,
+    id: {
+        type: String
+    },
     username: {
         type: String,
         required: true
