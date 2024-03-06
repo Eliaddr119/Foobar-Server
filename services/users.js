@@ -44,7 +44,7 @@ const updateUser = async (username, password, displayName, profilePic, friends, 
     if (friendsRequest) {
         user.friendsRequest = friendsRequest;
     }
-    userPosts = await Post.find({ username: username });
+    const userPosts = await Post.find({ username: username });
     userPosts.forEach(async (post) => {
         post.displayName = displayName;
         post.profilePic = profilePic;
