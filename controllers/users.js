@@ -153,7 +153,7 @@ const createPost = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
     try {
-        token = req.headers.authorization.split(" ")[1];
+        const token = req.headers.authorization.split(" ")[1];
         const decodedData = jwt.verify(token, 'foo');
         const username = decodedData.username;
         const friend = req.params.id;

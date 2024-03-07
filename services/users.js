@@ -3,7 +3,8 @@ import Post from '../models/posts.js';
 import e from 'cors';
 
 const getUser = async (username) => {
-    return await User.findOne({ username: username });
+    const user = await User.findOne({ username: username });
+    return [user.username, user.displayName, user.profilePic]
 }
 
 const getUserByDisplayName = async (displayName) => {

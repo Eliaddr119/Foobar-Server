@@ -1,9 +1,10 @@
 import express from "express";
 import { getPosts, getPost, createNewPost, updateExistingPost, removePost } from "../controllers/posts.js";
+import {authorization} from "../controllers/tokens.js";
 
 const router = express.Router();
 
-router.get("/", getPosts);
+router.get("/" ,getPosts);
 
 router.get("/:id", getPost);
 
