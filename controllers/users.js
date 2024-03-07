@@ -131,7 +131,7 @@ const getUserFriends = async (req, res) => {
     try {
         token = req.headers.authorization.split(" ")[1];
         const decodedData = jwt.verify(token, 'foo');
-        const userFriendList = await userServices.getUserFriends(req.params.id, decodedData.username);
+        const userFriendList = await userServices.getFriendList(req.params.id, decodedData.username);
         res.status(200).json(userFriendList);
     } catch (error) {
         if (error.message === "User not found") {
@@ -143,8 +143,8 @@ const getUserFriends = async (req, res) => {
 }
 const createPost = async (req, res) => {
     try {
-        const {id, username, displayName, profilePic, date, content, numlikes, likeby, image } = req.body;
-        const post = await userServices.createPost(id, username, displayName, profilePic, date, content, numlikes, likeby, image);
+        const {id, username, displayName, profilePic, date, content, numlikes, likeby, image, comments ,numComments } = req.body;
+        const post = await userServices.createPost(id, username, displayName, profilePic, date, content, numlikes, likeby, image, comments , numComments);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -195,6 +195,30 @@ const getLikeList = async (req, res) => {
     }
 }
 
+const addComment = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const username = req.params.id;
+        const comment = req.body.comment;
+        const post = await userServices.addComment(username, postid, comment);
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
+const removeComment = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const username = req.params.id;
+        const comment = req.body.comment;
+        const post = await userServices.removeComment(username, postid, comment);
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
 export {
     getUser,
     getUserByDisplayName,
@@ -212,5 +236,7 @@ export {
     getUserPosts,
     addlike,
     removeLike,
-    getLikeList
+    getLikeList,
+    addComment,
+    removeComment
 }

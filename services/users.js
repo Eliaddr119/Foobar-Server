@@ -1,10 +1,9 @@
 import User from '../models/users.js';
 import Post from '../models/posts.js';
-import e from 'cors';
 
 const getUser = async (username) => {
     const user = await User.findOne({ username: username });
-    return [user.username, user.displayName, user.profilePic]
+    return { username: user.username, displayName: user.displayName, profilePic: user.profilePic };
 }
 
 const getUserByDisplayName = async (displayName) => {
@@ -187,7 +186,7 @@ const getFriendList = async (friend, username) => {
         throw new Error("You are not friends with this user");
     }
 }
-const createPost = async (id,username, displayName, profilePic, date, content, numlikes, likeby, image) => {
+const createPost = async (id,username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments) => {
     const post = new Post({username, displayName, profilePic, content });
     if (id) {
         post.id = id;
@@ -203,6 +202,12 @@ const createPost = async (id,username, displayName, profilePic, date, content, n
     }
     if (image) {
         post.image = image;
+    }
+    if (comments) {
+        post.comments = comments;
+    }
+    if (numComments) {
+        post.numComments = numComments;
     }
     return await post.save();
 }
@@ -255,6 +260,30 @@ const getLikeList = async (postid) => {
     return post.likeby;
 }
 
+const addComment = async (username, postid, content) => {
+    const post = await Post.findOne({ id: postid });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    post.comments.push({username: username, content: content });
+    post.numComments += 1;
+    return await post.save();
+}
+
+const removeComment = async (username, postid, content) => {
+    const post = await Post.findOne({ id: postid });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    const index = post.comments.indexOf({ username, content });
+    if (index === -1) {
+        throw new Error("Comment not found");
+    }
+    post.comments.splice(index, 1);
+    post.numComments -= 1;
+    return await post.save();
+}
+
 export default {
     getUser,
     getUserByDisplayName,
@@ -272,5 +301,7 @@ export default {
     getUserPosts,
     addlike,
     removeLike,
-    getLikeList
+    getLikeList,
+    addComment,
+    removeComment
 }

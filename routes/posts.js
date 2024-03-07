@@ -1,17 +1,11 @@
 import express from "express";
-import { getPosts, getPost, createNewPost, updateExistingPost, removePost } from "../controllers/posts.js";
+import { getPosts, getCommentsList } from "../controllers/posts.js";
 import {authorization} from "../controllers/tokens.js";
 
 const router = express.Router();
 
-router.get("/" ,getPosts);
+router.get("/",authorization ,getPosts);
 
-router.get("/:id", getPost);
-
-router.post("/", createNewPost);
-
-router.patch("/:id", updateExistingPost);
-
-router.delete("/:id", removePost);
+router.get("/:id/commentsList", getCommentsList);
 
 export default router;
