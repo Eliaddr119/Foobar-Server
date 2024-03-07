@@ -28,7 +28,7 @@ const getPosts = async (username) => {
     if (friendPosts.length === 0) {
         return nonFriendPosts;
     }
-    return [...friendPosts, ...additionalPosts];
+    return [...friendPosts, ...nonFriendPosts];
 }
 
 const getPost = async (id) => {
