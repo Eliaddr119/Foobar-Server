@@ -212,7 +212,7 @@ const removeComment = async (req, res) => {
     try {
         const postid = req.params.pid;
         const username = req.params.id;
-        const comment = req.body.comment;
+
         const commentId = req.body.commentId;
         const post = await userServices.removeComment(commentId,username, postid);
         res.status(200).json(post);
