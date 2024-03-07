@@ -129,7 +129,7 @@ const deletePostUser = async (req, res) => {
 
 const getUserFriends = async (req, res) => {
     try {
-        token = req.headers.authorization.split(" ")[1];
+        const token = req.headers.authorization.split(" ")[1];
         const decodedData = jwt.verify(token, 'foo');
         const userFriendList = await userServices.getFriendList(req.params.id, decodedData.username);
         res.status(200).json(userFriendList);
@@ -200,7 +200,8 @@ const addComment = async (req, res) => {
         const postid = req.params.pid;
         const username = req.params.id;
         const comment = req.body.comment;
-        const post = await userServices.addComment(username, postid, comment);
+        const commentId = req.body.commentId;
+        const post = await userServices.addComment(commentId ,username, postid, comment);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -212,7 +213,8 @@ const removeComment = async (req, res) => {
         const postid = req.params.pid;
         const username = req.params.id;
         const comment = req.body.comment;
-        const post = await userServices.removeComment(username, postid, comment);
+        const commentId = req.body.commentId;
+        const post = await userServices.removeComment(commentId,username, postid);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });

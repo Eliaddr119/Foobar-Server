@@ -31,8 +31,12 @@ const Post = new schema({
         type: Number,
         default: 0
     },
-    comments: [
-        {
+    comments: {
+        type: [{
+            id: {
+                type: String,
+                required: true
+            },
             username: {
                 type: String,
                 required: true
@@ -41,8 +45,9 @@ const Post = new schema({
                 type: String,
                 required: true
             }
-        }
-    ],
+        }],
+        default: []
+    },
     numlikes: {
         type: Number,
         default: 0
