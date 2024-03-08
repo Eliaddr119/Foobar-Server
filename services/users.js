@@ -1,14 +1,17 @@
 import User from '../models/users.js';
 import Post from '../models/posts.js';
 
+//get user by username
 const getUser = async (username) => {
     const user = await User.findOne({ username: username });
     return { username: user.username, displayName: user.displayName, profilePic: user.profilePic };
 }
 
+//get user by display name
 const getUserByDisplayName = async (displayName) => {
     return await User.findMany({ displayName: displayName });
 }
+
 
 const createUser = async (username, password, displayName, profilePic, friends, friendsRequest) => {
     if (await User.findOne({ username: username })) {
@@ -66,6 +69,14 @@ const deleteUser = async (username) => {
             post.numlikes -= 1;
             await post.save();
         }
+        post.comments.forEach(async (comment) => {
+            if (comment.username === username) {
+                const index = post.comments.indexOf(comment);
+                post.comments.splice(index, 1);
+                post.numComments -= 1;
+                await post.save();
+            }
+        });
     });
     const users = await User.find({});
     users.forEach(async (user) => {
@@ -287,6 +298,14 @@ const removeComment = async (commentId,username, postid) => {
     return await post.save();
 }
 
+const getUserFriendRequestList = async (username) => {
+    const user = await User.find({ username: username });
+    if (!user) {
+        throw new Error("User not found");
+    }
+    return user.friendsRequest;
+}
+
 export default {
     getUser,
     getUserByDisplayName,
@@ -306,5 +325,6 @@ export default {
     removeLike,
     getLikeList,
     addComment,
-    removeComment
+    removeComment,
+    getUserFriendRequestList
 }

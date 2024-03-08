@@ -226,6 +226,16 @@ const removeComment = async (req, res) => {
     }
 }
 
+const getUserFriendRequestList = async (req, res) => {
+    try {
+        const user = req.params.id;
+        const userFriendList = await userServices.getUserFriendRequestList(user);
+        res.status(200).json(userFriendList);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
 export {
     getUser,
     getUserByDisplayName,
@@ -245,5 +255,6 @@ export {
     removeLike,
     getLikeList,
     addComment,
-    removeComment
+    removeComment,
+    getUserFriendRequestList
 }

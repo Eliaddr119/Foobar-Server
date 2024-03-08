@@ -17,7 +17,8 @@ import {
     removeLike,
     getLikeList,
     addComment,
-    removeComment
+    removeComment,
+    getUserFriendRequestList
 } from "../controllers/users.js";
 import {authorization} from "../controllers/tokens.js";
 
@@ -38,6 +39,8 @@ router.get("/:id/posts",authorization ,getUserPosts); //get user posts
 router.get("/:id/friends",authorization ,getUserFriends); //get friend list
 
 router.post("/:id/friends",authorization ,addFriendRequest); //add friend request
+
+router.get("/:id/friendsRequest",authorization ,getUserFriendRequestList); //get friend request list
 
 router.patch("/:id/friends/:fid",authorization ,addFriend); //accept friend request fid in user id
 
