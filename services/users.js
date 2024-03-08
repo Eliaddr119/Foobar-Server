@@ -12,7 +12,7 @@ const getUserByDisplayName = async (displayName) => {
     return await User.findMany({ displayName: displayName });
 }
 
-
+//create new user
 const createUser = async (username, password, displayName, profilePic, friends, friendsRequest) => {
     if (await User.findOne({ username: username })) {
         throw new Error("Username already exists");
@@ -27,6 +27,7 @@ const createUser = async (username, password, displayName, profilePic, friends, 
     return await user.save();
 }
 
+//update user by username
 const updateUser = async (username, password, displayName, profilePic, friends, friendsRequest) => {
     const user = await User.findOne({ username: username });
     if (!user) {
@@ -47,8 +48,10 @@ const updateUser = async (username, password, displayName, profilePic, friends, 
     if (friendsRequest) {
         user.friendsRequest = friendsRequest;
     }
+    //update user's posts
     const userPosts = await Post.find({ username: username });
     userPosts.forEach(async (post) => {
+        //the only thing that can be updated in a post is the display name and profile pic
         post.displayName = displayName;
         post.profilePic = profilePic;
         await post.save();
@@ -56,12 +59,18 @@ const updateUser = async (username, password, displayName, profilePic, friends, 
     return await user.save();
 }
 
+//delete user by username
 const deleteUser = async (username) => {
+    //find user in db
     if (!await User.findOne({ username: username })) {
         throw new Error("User not found");
     }
+    //delete user's posts
     Post.deleteMany({ username: username })
+    //find all posts in db
     const post = await Post.find({})
+    //for each post, remove the user from the likeby list and comments list and
+    //decrement the numlikes and numComments by 1 if the user has liked the post or commented on it
     post.forEach(async (post) => {
         const index = post.likeby.indexOf(username);
         if (index !== -1) {
@@ -78,7 +87,9 @@ const deleteUser = async (username) => {
             }
         });
     });
+    //get all users from db
     const users = await User.find({});
+    //for each user, remove the user from their friends list and friends request list
     users.forEach(async (user) => {
         const index = user.friends.indexOf(username);
         if (index !== -1) {
@@ -91,54 +102,74 @@ const deleteUser = async (username) => {
             await user.save();
         }
     });
+    //finally, delete the user
     return await User.findOneAndDelete({ username: username });
 }
 
+//remove friend from user's friend list
 const removeFriend = async (username, friend) => {
+    //find user and friend in db
     const user = await User.findOne({ username: username });
     const friendUser = await User.findOne({ username: friend })
+
+    //if user or friend not found, throw error
     if (!user || !friendUser) {
         throw new Error("User or friend not found");
     }
+    //if friend is not in user's friend list, throw error
     const index = user.friends.indexOf(friend);
     if (index !== -1) {
+        //remove friend from user's friend list
         user.friends.splice(index, 1);
     } else {
         throw new Error("FriendUser is not your friend")
     }
     index = friendUser.indexOf(username)
     if (index !== -1) {
+        //remove user from friend's friend list
         friendUser.friends.splice(index, 1)
     }
     await friend.save
     return await user.save();
 }
 
+//add friend request to user's friend request list
 const addFriendRequest = async (username, friend) => {
+    //find user and friend in db
     const user = await User.findOne({ username: username });
     const friendUser = await User.findOne({ username: friend });
+    //if user or friend not found, throw error
     if (!user || !friendUser) {
         throw new Error("user not found or friend not found")
     }
+    //if user and friend are the same, throw error
     if (username === friend) {
         throw new Error("You can't add yourself as a friend")
     }
     if (!friendUser.friendsRequest.includes(username)) {
+        //add user to friend's friend request list
         friendUser.friendsRequest.push(username);
     }
     return await friendUser.save();
 }
 
+//accept friend request
 const acceptFriendRequest = async (username, friend) => {
+    //find user and friend in db
     const user = await User.findOne({ username: username });
     const friendUser = await User.findOne({ username: friend });
+    //if user or friend not found, throw error
     if (!user || !friendUser) {
         throw new Error("user not found")
     }
+    //if friend is not in user's friend request list, throw error
     index = user.friendsRequest.indexOf(friend);
     if (index !== -1) {
+        //remove friend from user's friend request list
         user.friendsRequest.splice(index, 1);
+        //add friend to user's friend list
         user.friends.push(friend);
+        //add user to friend's friend list
         friendUser.friends.push(username);
     } else {
         throw new Error("friend request not found")
@@ -147,13 +178,17 @@ const acceptFriendRequest = async (username, friend) => {
     return await user.save();
 }
 
+//reject friend request
 const rejectFriendRequest = async (username, friend) => {
+    //find user db
     const user = await User.findOne({ username: username });
     if (!user) {
         throw new Error("user not found")
     }
+    //if friend is not in user's friend request list, throw error
     index = user.friendsRequest.indexOf(friend);
     if (index !== -1) {
+        //remove friend from user's friend request list
         user.friendsRequest.splice(index, 1);
     } else {
         throw new Error("friend request not found")
@@ -161,41 +196,58 @@ const rejectFriendRequest = async (username, friend) => {
     return await user.save();
 }
 
+//update post by post id
 const updatePostUser = async (username, postid, content, image ) => {
+    //find post in db
     const post = await Post.findOne({ id: postid });
+    //if post not found, throw error
     if (!post) {
         throw new Error("Post not found");
     }
+    //if user is not the author of the post, throw error
     if (post.username !== username) {
         throw new Error("You can only update your own post");
     }
+    //update post
     post.content = content;
     post.image = image;
     return await post.save();
 }
 
+//delete post by post id
 const deletePostUser = async (username, postid) => {
+    //find post in db
     const post = await Post.findOne({ id: postid });
+    //if post not found, throw error
     if (!post) {
         throw new Error("Post not found");
     }
+    //if user is not the author of the post, throw error
     if (post.username !== username) {
         throw new Error("You can only delete your own post");
     }
+    //delete post
     return await Post.findOneAndDelete({ id: postid });
 }
 
+//get friend list
 const getFriendList = async (friend, username) => {
+    //find friend in db
     const user = await User.findOne({ username: friend });
+    //if friend not found, throw error
     if (!user) {
         throw new Error("User not found");
     }
+    //if user is not friends with friend or user is not the same as friend, throw error
     if (user.friends.includes(username) || user.username === username) {
+        //return friend's friend list
         return user.friends;
     } else {
         throw new Error("You are not friends with this user");
     }
 }
+
+//create post
 const createPost = async (id,username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments) => {
     const post = new Post({username, displayName, profilePic, content });
     if (id) {
@@ -222,6 +274,7 @@ const createPost = async (id,username, displayName, profilePic, date, content, n
     return await post.save();
 }
 
+//get user posts
 const getUserPosts = async (friend, username) => {
     const friendUser = await User.findOne({ username: friend });
     const user = await User.findOne({ username: username });
