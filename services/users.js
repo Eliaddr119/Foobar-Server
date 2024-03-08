@@ -113,10 +113,9 @@ const addFriendRequest = async (username, friend) => {
         throw new Error("You can't add yourself as a friend")
     }
     if (!friendUser.friendsRequest.includes(username)) {
-        user.friendsRequest.push(username);
+        friendUser.friendsRequest.push(username);
     }
-    await friendUser.save();
-    return await user.save();
+    return await friendUser.save();
 }
 
 const acceptFriendRequest = async (username, friend) => {

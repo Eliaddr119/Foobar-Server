@@ -63,7 +63,11 @@ const removeFriend = async (req, res) => {
 
 const addFriendRequest = async (req, res) => {
     try {
-        await userServices.addFriendRequest(req.params.id, req.body.friendUsername);
+        const token = req.headers.authorization.split(" ")[1];
+        const decodedData = jwt.verify(token, 'foo');
+        const fromUser = decodedData.username;
+        const toFriend = req.params.id;
+        await userServices.addFriendRequest(fromUser, toFriend);
         res.status(200).json({ message: "Friend request sent successfully" });
     } catch (error) {
         if (error.message === "You can't send friend request to yourself") {
@@ -90,6 +94,7 @@ const rejectFriendRequest = async (req, res) => {
     }
     res.status(200).json({ message: "Friend request removed successfully" });
 }
+
 const addFriend = async (req, res) => {
     try {
         await userServices.acceptFriendRequest(req.params.id, req.params.fid);
