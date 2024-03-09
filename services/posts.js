@@ -1,8 +1,8 @@
 import Post from '../models/posts.js';
 import User from '../models/users.js';
 
-const createPost = async (id, username, displayName, date, content, numlikes, likeby, image) => {
-    const post = new Post({ id, username, displayName, content});
+const createPost = async (username, displayName, date, content, numlikes, likeby, image) => {
+    const post = new Post({username, displayName, content});
     if (date) {
         post.date = date;
     }
@@ -32,7 +32,7 @@ const getPosts = async (username) => {
 }
 
 const getPost = async (id) => {
-    return await Post.findOne({ id: id });
+    return await Post.findOne({ _id: id });
 }
 
 const getPostsByUserName = async (username) => {
@@ -40,7 +40,7 @@ const getPostsByUserName = async (username) => {
 }
 
 const updatePost = async (id, username, displayName, date, content, numlikes, likeby, image) => {
-    const post = await Post.findOne({ id: id });
+    const post = await Post.findOne({ _id: id });
     if (username) {
         post.username = username;
     }
@@ -71,7 +71,7 @@ const deletePost = async (id) => {
 }
 
 const getCommentsList = async (postid) => {
-    const post = await Post.findOne({ id: postid }); 
+    const post = await Post.findOne({ _id: postid }); 
     return post.comments;
 }
 

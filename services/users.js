@@ -199,7 +199,7 @@ const rejectFriendRequest = async (username, friend) => {
 //update post by post id
 const updatePostUser = async (username, postid, content, image ) => {
     //find post in db
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     //if post not found, throw error
     if (!post) {
         throw new Error("Post not found");
@@ -217,7 +217,7 @@ const updatePostUser = async (username, postid, content, image ) => {
 //delete post by post id
 const deletePostUser = async (username, postid) => {
     //find post in db
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     //if post not found, throw error
     if (!post) {
         throw new Error("Post not found");
@@ -227,7 +227,7 @@ const deletePostUser = async (username, postid) => {
         throw new Error("You can only delete your own post");
     }
     //delete post
-    return await Post.findOneAndDelete({ id: postid });
+    return await Post.findOneAndDelete({ _id: postid });
 }
 
 //get friend list
@@ -248,11 +248,8 @@ const getFriendList = async (friend, username) => {
 }
 
 //create post
-const createPost = async (id,username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments) => {
+const createPost = async (username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments) => {
     const post = new Post({username, displayName, profilePic, content });
-    if (id) {
-        post.id = id;
-    }
     if (date) {
         post.date = date;
     }
@@ -289,7 +286,7 @@ const getUserPosts = async (friend, username) => {
 }
 
 const addlike = async (username, postid) => {
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
@@ -302,7 +299,7 @@ const addlike = async (username, postid) => {
 }
 
 const removeLike = async (username, postid) => {
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
@@ -316,7 +313,7 @@ const removeLike = async (username, postid) => {
 }
 
 const getLikeList = async (postid) => {
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
@@ -324,7 +321,7 @@ const getLikeList = async (postid) => {
 }
 
 const addComment = async (commentId, username, postid, content) => {
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
@@ -335,7 +332,7 @@ const addComment = async (commentId, username, postid, content) => {
 }
 
 const removeComment = async (commentId,username, postid) => {
-    const post = await Post.findOne({ id: postid });
+    const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
@@ -352,7 +349,7 @@ const removeComment = async (commentId,username, postid) => {
 }
 
 const getUserFriendRequestList = async (username) => {
-    const user = await User.find({ username: username });
+    const user = await User.findOne({ username: username });
     if (!user) {
         throw new Error("User not found");
     }
