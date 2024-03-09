@@ -24,11 +24,12 @@ const getPosts = async (username) => {
     
     const friendPosts = await Post.find({ username: { $in: friends } }).sort({ date: -1 }).limit(20);
     const nonFriendPosts = await Post.find({ username: { $nin: friends } }).sort({ date: -1 }).limit(5);
-    
     if (friendPosts.length === 0) {
         return nonFriendPosts;
     }
-    return [...friendPosts, ...nonFriendPosts];
+    const allPosts = [...friendPosts, ...nonFriendPosts];
+    allPosts.sort((a, b) => b.date - a.date);
+    return allPosts;
 }
 
 const getPost = async (id) => {
