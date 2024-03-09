@@ -320,13 +320,12 @@ const getLikeList = async (postid) => {
     return post.likeby;
 }
 
-const addComment = async (commentId, username, postid, content) => {
+const addComment = async (username, postid, content) => {
     const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
     }
-    post.comments.push({id: commentId, username: username, content: content});
-    console.log("post.comments after the push",post.comments);
+    post.comments.push({username: username, content: content});
     post.numComments += 1;
     return await post.save();
 }
@@ -336,7 +335,8 @@ const removeComment = async (commentId,username, postid) => {
     if (!post) {
         throw new Error("Post not found");
     }
-    const index = post.comments.findIndex((comment) => comment.id === commentId);
+    const index = post.comments.findIndex((comment) => comment._id.toString() === commentId);
+    // const index = post.comments.findIndex((comment) => comment._id === commentId);
     if (index === -1) {
         throw new Error("Comment not found");
     }

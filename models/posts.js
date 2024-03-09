@@ -30,10 +30,6 @@ const Post = new schema({
     },
     comments: {
         type: [{
-            id: {
-                type: String,
-                required: true
-            },
             username: {
                 type: String,
                 required: true

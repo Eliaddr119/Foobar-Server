@@ -206,7 +206,7 @@ const addComment = async (req, res) => {
         const username = req.params.id;
         const comment = req.body.comment;
         const commentId = req.body.commentId;
-        const post = await userServices.addComment(commentId ,username, postid, comment);
+        const post = await userServices.addComment(username, postid, comment);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
