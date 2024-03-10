@@ -352,7 +352,7 @@ const removeComment = async (commentId,username, postid) => {
 }
 
 const getUserFriendRequestList = async (username) => {
-    const user = await User.find({ username: username });
+    const user = await User.findOne({ username: username });
     if (!user) {
         throw new Error("User not found");
     }
