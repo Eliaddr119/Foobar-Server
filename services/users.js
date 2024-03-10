@@ -71,8 +71,9 @@ const deleteUser = async (username) => {
     const post = await Post.find({})
     //for each post, remove the user from the likeby list and comments list and
     //decrement the numlikes and numComments by 1 if the user has liked the post or commented on it
+    var index;
     post.forEach(async (post) => {
-        const index = post.likeby.indexOf(username);
+        index = post.likeby.indexOf(username);
         if (index !== -1) {
             post.likeby.splice(index, 1);
             post.numlikes -= 1;
@@ -80,7 +81,7 @@ const deleteUser = async (username) => {
         }
         post.comments.forEach(async (comment) => {
             if (comment.username === username) {
-                const index = post.comments.indexOf(comment);
+                index = post.comments.indexOf(comment);
                 post.comments.splice(index, 1);
                 post.numComments -= 1;
                 await post.save();
@@ -91,7 +92,7 @@ const deleteUser = async (username) => {
     const users = await User.find({});
     //for each user, remove the user from their friends list and friends request list
     users.forEach(async (user) => {
-        const index = user.friends.indexOf(username);
+        index = user.friends.indexOf(username);
         if (index !== -1) {
             user.friends.splice(index, 1);
             await user.save();
@@ -336,7 +337,6 @@ const removeComment = async (commentId,username, postid) => {
         throw new Error("Post not found");
     }
     const index = post.comments.findIndex((comment) => comment._id.toString() === commentId);
-    // const index = post.comments.findIndex((comment) => comment._id === commentId);
     if (index === -1) {
         throw new Error("Comment not found");
     }
