@@ -129,7 +129,7 @@ const removeFriend = async (username, friend) => {
         //remove user from friend's friend list
         friendUser.friends.splice(index, 1)
     }
-    await friend.save
+    await friend.save();
     return await user.save();
 }
 
@@ -163,7 +163,7 @@ const acceptFriendRequest = async (username, friend) => {
         throw new Error("user not found")
     }
     //if friend is not in user's friend request list, throw error
-    index = user.friendsRequest.indexOf(friend);
+    const index = user.friendsRequest.indexOf(friend);
     if (index !== -1) {
         //remove friend from user's friend request list
         user.friendsRequest.splice(index, 1);
