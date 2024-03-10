@@ -3,9 +3,6 @@ import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const Post = new schema({
-    id: {
-        type: String
-    },
     username: {
         type: String,
         required: true
@@ -33,10 +30,6 @@ const Post = new schema({
     },
     comments: {
         type: [{
-            id: {
-                type: String,
-                required: true
-            },
             username: {
                 type: String,
                 required: true
