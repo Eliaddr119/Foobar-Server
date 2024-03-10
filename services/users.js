@@ -117,19 +117,19 @@ const removeFriend = async (username, friend) => {
         throw new Error("User or friend not found");
     }
     //if friend is not in user's friend list, throw error
-    const index = user.friends.indexOf(friend);
+    var index = user.friends.indexOf(friend);
     if (index !== -1) {
         //remove friend from user's friend list
         user.friends.splice(index, 1);
     } else {
         throw new Error("FriendUser is not your friend")
     }
-    index = friendUser.indexOf(username)
+    index = friendUser.friends.indexOf(username)
     if (index !== -1) {
         //remove user from friend's friend list
         friendUser.friends.splice(index, 1)
     }
-    await friend.save();
+    await friendUser.save();
     return await user.save();
 }
 
@@ -186,7 +186,7 @@ const rejectFriendRequest = async (username, friend) => {
         throw new Error("user not found")
     }
     //if friend is not in user's friend request list, throw error
-    index = user.friendsRequest.indexOf(friend);
+    const index = user.friendsRequest.indexOf(friend);
     if (index !== -1) {
         //remove friend from user's friend request list
         user.friendsRequest.splice(index, 1);
