@@ -24,19 +24,28 @@ const getToken = async (req, res) => {
 }
 
 const authorization = async (req, res, next) => {
-    const authorizations = req.headers.authorization.split(" ");
-    if (authorizations[0] !== "Bearer") {
-        res.status(401).json({ message: "Invalid authorization" });
+    try {
+        if (!req.headers.authorization) {
+            return res.status(401).json({ message: "Authorization not found" });
+        }
+        const authorizations = req.headers.authorization.split(" ");
+        if (authorizations[0] !== "Bearer") {
+            return res.status(401).json({ message: "Invalid authorization" });
+        }
+        const token = authorizations[1];
+        if (!token) {
+            return res.status(401).json({ message: "Token not found" });
+        }
+        if (!verifyToken(token)) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
+        next();
     }
-    const token = authorizations[1];
-    if (!token) {
-        res.status(401).json({ message: "Token not found" });
+    catch (error) {
+        res.status(401).json({ message: error.message });
     }
-    if (!verifyToken(token)) {
-        res.status(401).json({ message: "Invalid token" });
-    }
-    next();
 }
+
 export {
     getToken,
     authorization

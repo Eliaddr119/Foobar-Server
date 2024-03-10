@@ -226,6 +226,19 @@ const removeComment = async (req, res) => {
     }
 }
 
+const updateComment = async (req, res) => {
+    try {
+        const postid = req.params.pid;
+        const username = req.params.id;
+        const commentId = req.body.commentId;
+        const comment = req.body.comment;
+        const post = await userServices.updateComment(username, postid, commentId, comment);
+        res.status(200).json(post);
+    }catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
 const getUserFriendRequestList = async (req, res) => {
     try {
         const user = req.params.id;
@@ -256,5 +269,6 @@ export {
     getLikeList,
     addComment,
     removeComment,
-    getUserFriendRequestList
+    getUserFriendRequestList,
+    updateComment
 }

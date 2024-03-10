@@ -348,6 +348,22 @@ const removeComment = async (commentId,username, postid) => {
     return await post.save();
 }
 
+const updateComment = async (commentId,username, postid, content) => {
+    const post = await Post.findOne({ _id: postid})
+    if (!post) {
+        throw new Error("Post not found")
+    }
+    const index = post.comments.findIndex((comment) => comment._id.toString() === commentId)
+    if (index === -1) {
+        throw new Error("Comment not found")
+    }
+    if (post.comments[index].username !== username) {
+        throw new Error("You can only update your own comment")
+    }
+    post.comments[index].content = content
+    return await post.save()
+}
+
 const getUserFriendRequestList = async (username) => {
     const user = await User.findOne({ username: username });
     if (!user) {
@@ -376,5 +392,6 @@ export default {
     getLikeList,
     addComment,
     removeComment,
-    getUserFriendRequestList
+    getUserFriendRequestList,
+    updateComment
 }

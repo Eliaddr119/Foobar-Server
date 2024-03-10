@@ -18,7 +18,8 @@ import {
     getLikeList,
     addComment,
     removeComment,
-    getUserFriendRequestList
+    getUserFriendRequestList,
+    updateComment
 } from "../controllers/users.js";
 import {authorization} from "../controllers/tokens.js";
 
@@ -51,6 +52,8 @@ router.patch("/:id/posts/:pid",authorization ,updatePostUser); //update post pid
 router.delete("/:id/posts/:pid",authorization ,deletePostUser); //delete post pid
 
 router.post("/:id/posts/:pid/comment",authorization ,addComment); //add comment from user id to post pid
+
+router.patch("/:id/posts/:pid/comment",authorization, updateComment); //update comment from user id to post pid
 
 router.delete("/:id/posts/:pid/comment",authorization ,removeComment); //remove comment from user id to post pid
 
