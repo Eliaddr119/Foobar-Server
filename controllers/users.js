@@ -204,9 +204,8 @@ const addComment = async (req, res) => {
     try {
         const postid = req.params.pid;
         const username = req.params.id;
-        const comment = req.body.comment;
-        const commentId = req.body.commentId;
-        const post = await userServices.addComment(username, postid, comment);
+        const content = req.body.content;
+        const post = await userServices.addComment(username, postid, content);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -217,7 +216,6 @@ const removeComment = async (req, res) => {
     try {
         const postid = req.params.pid;
         const username = req.params.id;
-
         const commentId = req.body.commentId;
         const post = await userServices.removeComment(commentId,username, postid);
         res.status(200).json(post);
@@ -231,8 +229,8 @@ const updateComment = async (req, res) => {
         const postid = req.params.pid;
         const username = req.params.id;
         const commentId = req.body.commentId;
-        const comment = req.body.comment;
-        const post = await userServices.updateComment(username, postid, commentId, comment);
+        const content = req.body.content;
+        const post = await userServices.updateComment(username, postid, commentId, content);
         res.status(200).json(post);
     }catch (error) {
         res.status(409).json({ message: error.message });
