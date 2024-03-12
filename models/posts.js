@@ -37,6 +37,10 @@ const Post = new schema({
             content: {
                 type: String,
                 required: true
+            },
+            date: {
+                type: Date,
+                default: Date.now
             }
         }],
         default: []
