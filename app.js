@@ -17,16 +17,17 @@ mongoose.connect("mongodb://127.0.0.1:27017", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-import postsData from "./Posts.json";
-import usersData from "./Users.json";
+import postsData from "./Posts.json" assert { type: 'json' };
+import usersData from "./Users.json" assert { type: 'json' };
 import Post from "./models/posts.js";
 import User from "./models/users.js";
 
-// try {
-//     await User.insertMany(usersData);
-//     await Post.insertMany(postsData);
-// }cach
-
+try {
+    await User.insertMany(usersData);
+    await Post.insertMany(postsData);
+} catch (error) {
+    console.log(error);
+}
 
 server.use(express.static('public'));
 

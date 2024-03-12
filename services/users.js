@@ -352,7 +352,7 @@ const removeComment = async (commentId,username, postid) => {
     return await post.save();
 }
 
-const updateComment = async (commentId,username, postid, content) => {
+const updateComment = async (username, postid, commentId, content) => {
     const post = await Post.findOne({ _id: postid})
     if (!post) {
         throw new Error("Post not found")
