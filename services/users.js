@@ -70,7 +70,7 @@ const deleteUser = async (username) => {
         throw new Error("User not found");
     }
     //delete user's posts
-    Post.deleteMany({ username: username })
+    await Post.deleteMany({ username: username })
     //find all posts in db
     const post = await Post.find({})
     //for each post, remove the user from the likeby list and comments list and
