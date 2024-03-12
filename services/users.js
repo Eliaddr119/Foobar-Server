@@ -4,7 +4,8 @@ import Post from '../models/posts.js';
 //get user by username
 const getUser = async (username) => {
     const user = await User.findOne({ username: username });
-    return { username: user.username, displayName: user.displayName, profilePic: user.profilePic };
+    return { username: user.username, displayName: user.displayName, profilePic: user.profilePic,
+         friends: user.friends, friendsRequest: user.friendsRequest };
 }
 
 //get user by display name
@@ -202,7 +203,7 @@ const rejectFriendRequest = async (username, friend) => {
 }
 
 //update post by post id
-const updatePostUser = async (username, postid, content, image ) => {
+const updatePostUser = async (username, postid, content, image) => {
     //find post in db
     const post = await Post.findOne({ _id: postid });
     //if post not found, throw error
@@ -254,7 +255,7 @@ const getFriendList = async (friend, username) => {
 
 //create post
 const createPost = async (username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments) => {
-    const post = new Post({username, displayName, profilePic, content });
+    const post = new Post({ username, displayName, profilePic, content });
     if (date) {
         post.date = date;
     }
@@ -285,7 +286,7 @@ const getUserPosts = async (friend, username) => {
     }
     if (friendUser.friends.includes(username) || friendUser.username === username) {
         return await Post.find({ username: friend });
-    }else {
+    } else {
         throw new Error("You are not friends with this user");
     }
 }
@@ -330,12 +331,12 @@ const addComment = async (username, postid, content) => {
     if (!post) {
         throw new Error("Post not found");
     }
-    post.comments.push({username: username, content: content});
+    post.comments.push({ username: username, content: content });
     post.numComments += 1;
     return await post.save();
 }
 
-const removeComment = async (commentId,username, postid) => {
+const removeComment = async (commentId, username, postid) => {
     const post = await Post.findOne({ _id: postid });
     if (!post) {
         throw new Error("Post not found");
@@ -353,7 +354,7 @@ const removeComment = async (commentId,username, postid) => {
 }
 
 const updateComment = async (username, postid, commentId, content) => {
-    const post = await Post.findOne({ _id: postid})
+    const post = await Post.findOne({ _id: postid })
     if (!post) {
         throw new Error("Post not found")
     }
