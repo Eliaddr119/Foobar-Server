@@ -31,7 +31,8 @@ const createNewUser = async (req, res) => {
 
 const updateExistingUser = async (req, res) => {
     try {
-        const { username, password, profilePic, friends, friendsRequest } = req.body;
+        const {password, profilePic, friends, friendsRequest } = req.body;
+        const username = req.params.id;
         const user = await userServices.updateUser(username, password, profilePic, friends, friendsRequest);
         res.status(200).json(user);
     } catch (error) {
