@@ -52,8 +52,12 @@ const updateUser = async (username, password, displayName, profilePic, friends, 
     const userPosts = await Post.find({ username: username });
     userPosts.forEach(async (post) => {
         //the only thing that can be updated in a post is the display name and profile pic
-        post.displayName = displayName;
-        post.profilePic = profilePic;
+        if (displayName) {
+            post.displayName = displayName;
+        }
+        if (profilePic) {
+            post.profilePic = profilePic;
+        }
         await post.save();
     });
     return await user.save();
