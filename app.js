@@ -7,13 +7,9 @@ server.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 import cors from "cors";
 server.use(cors());
 
-// import customEnv from 'custom-env';
-// customEnv.env(process.env.NODE_ENV, './config');
-// console.log(process.env.NODE_ENV);
-// console.log(process.env.PORT);
 
 import mongoose from "mongoose";
-mongoose.connect("mongodb://127.0.0.1:27017", {
+mongoose.connect("mongodb://127.0.0.1:27017/foobar_db", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
