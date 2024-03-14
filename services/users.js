@@ -333,7 +333,7 @@ const addComment = async (username, postid, content) => {
     }
     post.comments.push({ username: username, content: content });
     post.numComments += 1;
-    return await post.save();
+    return post.save();
 }
 
 const removeComment = async (commentId, username, postid) => {
