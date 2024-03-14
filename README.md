@@ -9,7 +9,7 @@ Foobar Server App serves as the backend for the Foobar social network, handling 
 ## Features
 
 - **User Authentication**: Handles user registration, login, and logout functionalities.
-- **Post Management**: Manages posts uploaded by users, including creation, editing, deletion, and retrieval.
+- **User Management**: Manages posts uploaded by users, including creation, editing, deletion, and retrieval.
 - **Comment Management**: Handles comments on posts, allowing users to add, edit, delete, and retrieve comments.
 - **Database Integration**: Integrates with a MongoDB database to store user data, posts, and comments.
 - **RESTful API**: Provides a RESTful API for communication with the client-side application.
@@ -29,16 +29,22 @@ Foobar Server App serves as the backend for the Foobar social network, handling 
 
 ### Sign Up
 
-
-
+![Screenshot 2024-03-14 203337](https://github.com/Eliaddr119/Foobar-Server/assets/113431442/35285dae-6193-4d3d-8071-187188bdc135)
 
 ### Sign In
 
-![Sign In](signin_screen.png)
+![Screenshot 2024-03-14 203543](https://github.com/Eliaddr119/Foobar-Server/assets/113431442/4696b54a-f3e1-4fe7-afe6-ac0228d5b5fb)
+
 
 ### Feed Page
 
-![Feed Page](post_feed.png)
+![Screenshot 2024-03-14 203632](https://github.com/Eliaddr119/Foobar-Server/assets/113431442/08494e00-d613-4768-a2d9-e1a5900f5128)
+
+
+### Profile Page
+
+![Screenshot 2024-03-14 203710](https://github.com/Eliaddr119/Foobar-Server/assets/113431442/442e5532-6403-47ca-9402-99813c3ffafc)
+
 
 ## How to Run the Server App
 
@@ -47,7 +53,7 @@ To run the server app locally, follow these steps:
 1. Clone the repository:
 
 ```
-git clone https://github.com/yourusername/foobar_server.git
+git clone https://github.com/Eliaddr119/Foobar-Server.git
 ```
 
 2. Navigate to the project directory:
@@ -83,7 +89,3 @@ try {
     console.log(error);
 }
 ```
-
----
-
-Feel free to customize this README further to fit your specific project details and requirements. Let me know if you need further assistance!
