@@ -36,14 +36,18 @@ server.use(express.json());
 import postsRouter from "./routes/posts.js";
 import usersRouter from "./routes/users.js";
 import tokenRouter from "./routes/token.js";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 server.use("/api/posts", postsRouter);
 server.use("/api/users", usersRouter);
 server.use("/api/tokens", tokenRouter);
-// server.use("/" , )
-// server.get("/", (req, res) => {
-//     res.send("Hello World");
-// });
+server.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 server.listen(8080, () => {
     console.log("Server is running on port 8080 ");

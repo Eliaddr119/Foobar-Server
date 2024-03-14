@@ -18,6 +18,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
     "mongoose": "^8.2.1",
-    "react-manifest": "^1.0.5"
+    "path": "^0.12.7",
+    "react-manifest": "^1.0.5",
+    "url": "^0.11.3"
   }
 }
