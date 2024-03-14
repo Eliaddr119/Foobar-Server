@@ -1,6 +1,53 @@
-# Welcome to foobar Server App! 🖥️
+# Foobar Server App
 
-Foobar Server App is the backend application that powers the Foobar social network. This server app handles user authentication, manages posts and comments, and provides data to the client-side application.
+The Foobar Server App is a backend application that powers the Foobar social network. It follows the Model-View-Controller (MVC) architecture for better organization and separation of concerns. Below is an overview of the project structure:
+
+## Project Structure
+
+### Model
+
+The Model directory contains MongoDB schemas and related methods for interacting with the database:
+
+- **post.js**: Defines the schema for posts and includes methods for CRUD operations related to posts.
+- **user.js**: Defines the schema for users and includes methods for CRUD operations related to users.
+- **token.js**: Contains methods for managing authentication tokens.
+
+### Controller
+
+The Controller directory contains route handlers that process incoming HTTP requests and invoke corresponding methods from the Model:
+
+- **post.js**: Handles HTTP requests related to posts, such as creating, updating, or deleting posts.
+- **user.js**: Handles HTTP requests related to users, such as creating, updating, or deleting user accounts.
+- **token.js**: Handles HTTP requests related to authentication and token management.
+
+### Services
+
+The Services directory contains business logic methods for handling user and post-related operations:
+
+- **post.js**: Contains methods for performing business logic operations related to posts, such as fetching posts or managing post data.
+- **user.js**: Contains methods for performing business logic operations related to users, such as authentication or user data management.
+
+### Routes
+
+The Routes directory contains Express.js route definitions for different API endpoints:
+
+- **post.js**: Defines routes for handling HTTP requests related to posts.
+- **user.js**: Defines routes for handling HTTP requests related to users.
+- **token.js**: Defines routes for handling HTTP requests related to authentication and token management.
+
+### No Viewer
+
+As this is a backend server application, there is no Viewer directory. The application only returns JSON responses and does not render HTML views.
+
+## MVC Architecture Benefits
+
+- **Organization**: Separation of concerns into distinct directories makes the codebase easier to navigate and maintain.
+- **Scalability**: The modular structure allows for easier scaling by adding new features or modifying existing ones.
+- **Clarity**: The MVC architecture provides clear separation between different components, improving code readability and understanding.
+
+---
+
+With this project structure and adherence to the MVC architecture, the Foobar Server App aims to provide a robust and scalable backend foundation for the Foobar social network.
 
 ## Project Overview
 
