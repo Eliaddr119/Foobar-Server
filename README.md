@@ -71,16 +71,20 @@ npm install
 4. Start the server:
 
 ```
-npm start
+node app.js
 ```
 
+5. Open the site:
+
+   the user have 2 options:
+       1. go to the site http://localhost:8080/
+       2. use the web react app -> go to https://github.com/Eliaddr119/foobar_part2_web and follow the instructions in the readme.
 ## Note
 
 - Make sure you have MongoDB installed and running locally on port 27017.
 - The server initializes the database with 25 posts and 4 users by default. The users are named "shlomi", "yael", "roni", and "evya". Shlomi is friends with all other users. The password for all users is "Zx123456789".
 - Posts are ordered by date, with the newest posts appearing first.
 - If you prefer not to add the default posts to the database, you can comment out the following code block in `app.js`:
-
 ```javascript
 try {
     await User.insertMany(usersData);
@@ -89,3 +93,5 @@ try {
     console.log(error);
 }
 ```
+- Make sure you understand that you can run the web react app and the server or just run the server,
+becuse we have th build of the web react app in the server you can just go to http://localhost:8080/
