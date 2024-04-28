@@ -7,6 +7,19 @@ server.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 import cors from "cors";
 server.use(cors());
 
+import net from 'net';
+
+const addrres = ["8 1 2", "1 asdasd", "1 qeqwe", "1 qweqwe"]
+
+addrres.forEach((addr) => {
+    const client = new net.Socket();
+    const port = 5555;
+    client.connect(port, '172.20.182.178', function() {
+        client.write(addr);
+    });
+    client.on('end', function() {
+    });
+});
 
 import mongoose from "mongoose";
 mongoose.connect("mongodb://127.0.0.1:27017/foobar_db", {

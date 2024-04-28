@@ -1,5 +1,7 @@
+import { url } from 'inspector';
 import userServices from '../services/users.js';
 import jwt from 'jsonwebtoken';
+import net from 'net';
 
 const getUser = async (req, res) => {
     try {
@@ -115,6 +117,36 @@ const updatePostUser = async (req, res) => {
         const { content, image } = req.body;
         const postid = req.params.pid;
         const username = req.params.id;
+        const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
+        const websiteAddresses = content.match(urlRegex) || [];
+        if (websiteAddresses.length > 0) {
+            const port = 5555;
+            const ipAddress = '172.20.182.178'
+            const promises = websiteAddresses.map((url) => {
+                return new Promise((resolve, reject) => {
+                    const client = new net.Socket();
+                    client.connect(port, ipAddress , function() {
+                        console.log('Connected to the TCP server.');
+                    });
+                    client.write(("2" + " " + url));
+                    client.on('data', function(data) {
+                        console.log('Received: ' + data);
+                        if (data.toString() === '2 www.enet.com') {
+                            client.end();
+                            reject(new Error("The content contains a malicious URL"));
+                        } else {
+                            resolve();
+                        }
+                    });
+                });
+            });
+            try {
+                await Promise.all(promises);
+            } catch (error) {
+                res.status(200).json({ message: error.message });
+                return;
+            }
+        }
         const post = await userServices.updatePostUser(username, postid, content, image);
         res.status(200).json(post);
     } catch (error) {
@@ -150,6 +182,27 @@ const getUserFriends = async (req, res) => {
 const createPost = async (req, res) => {
     try {
         const {username, displayName, profilePic, date, content, numlikes, likeby, image, comments ,numComments } = req.body;
+        const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
+        const websiteAddresses = content.match(urlRegex) || [];
+        if (websiteAddresses.length > 0) {
+            const port = 5555;
+            const ipAddress = '172.20.182.178'
+            websiteAddresses.forEach((url) => {
+                const client = new net.Socket();
+                client.connect(port, ipAddress , function() {
+                    console.log('Connected to the TCP server.');
+                });
+                client.write(("2" + " " + url));
+                client.on('data', function(data) {
+                    console.log('Received: ' + data);
+                    if (data.toString() === '2 www.enet.com') {
+                        client.end();
+                        res.status(200).json({ message: "The content contains a malicious URL" });
+                        return;
+                    }
+                });
+            });
+        }
         const post = await userServices.createPost(username, displayName, profilePic, date, content, numlikes, likeby, image, comments , numComments);
         res.status(200).json(post);
     } catch (error) {
