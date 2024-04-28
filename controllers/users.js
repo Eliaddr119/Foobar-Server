@@ -33,9 +33,9 @@ const createNewUser = async (req, res) => {
 
 const updateExistingUser = async (req, res) => {
     try {
-        const {password, displayName, profilePic, friends, friendsRequest } = req.body;
+        const { password, displayName, profilePic, friends, friendsRequest } = req.body;
         const username = req.params.id;
-        const user = await userServices.updateUser(username, password,displayName , profilePic, friends, friendsRequest);
+        const user = await userServices.updateUser(username, password, displayName, profilePic, friends, friendsRequest);
         res.status(200).json(user);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -87,8 +87,8 @@ const rejectFriendRequest = async (req, res) => {
     } catch (error) {
         if (error.message === "friend request not found") {
             try {
-            await userServices.removeFriend(req.params.id, req.params.fid)
-            }catch (error) {
+                await userServices.removeFriend(req.params.id, req.params.fid)
+            } catch (error) {
                 res.status(408).json({ message: error.message });
             }
         } else {
@@ -111,6 +111,32 @@ const addFriend = async (req, res) => {
         }
     }
 }
+const checkUrl = (url) => {
+    return new Promise((resolve, reject) => {
+        const client = new net.Socket();
+        const port = 5555;
+        const ipAddress = '172.20.182.178'
+        client.connect(port, ipAddress, function () {
+            console.log('Connected to the TCP server.');
+            client.write(("2" + " " + url));
+        });
+
+        client.on('data', function (data) {
+            console.log('Received: ' + data);
+            client.end();
+            if (data.toString() === 'true true') {
+                resolve({ malicious: true, message: "The content contains a malicious URL" });
+            } else {
+                resolve({ malicious: false });
+            }
+        });
+
+        client.on('error', function (err) {
+            console.log('Error: ' + err);
+            reject(err);
+        });
+    });
+}
 
 const updatePostUser = async (req, res) => {
     try {
@@ -120,31 +146,16 @@ const updatePostUser = async (req, res) => {
         const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
         const websiteAddresses = content.match(urlRegex) || [];
         if (websiteAddresses.length > 0) {
-            const port = 5555;
-            const ipAddress = '172.20.182.178'
-            const promises = websiteAddresses.map((url) => {
-                return new Promise((resolve, reject) => {
-                    const client = new net.Socket();
-                    client.connect(port, ipAddress , function() {
-                        console.log('Connected to the TCP server.');
-                    });
-                    client.write(("2" + " " + url));
-                    client.on('data', function(data) {
-                        console.log('Received: ' + data);
-                        if (data.toString() === '2 www.enet.com') {
-                            client.end();
-                            reject(new Error("The content contains a malicious URL"));
-                        } else {
-                            resolve();
-                        }
-                    });
-                });
-            });
-            try {
-                await Promise.all(promises);
-            } catch (error) {
-                res.status(200).json({ message: error.message });
-                return;
+            for (const url of websiteAddresses) {
+                try {
+                    const result = await checkUrl(url);
+                    if (result.malicious) {
+                        return res.status(410).json({ message: result.message });
+                    }
+                    // Continue with your logic if the URL is not malicious
+                } catch (error) {
+                    // Handle error
+                }
             }
         }
         const post = await userServices.updatePostUser(username, postid, content, image);
@@ -181,29 +192,24 @@ const getUserFriends = async (req, res) => {
 }
 const createPost = async (req, res) => {
     try {
-        const {username, displayName, profilePic, date, content, numlikes, likeby, image, comments ,numComments } = req.body;
+        const { username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments } = req.body;
         const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
         const websiteAddresses = content.match(urlRegex) || [];
         if (websiteAddresses.length > 0) {
-            const port = 5555;
-            const ipAddress = '172.20.182.178'
-            websiteAddresses.forEach((url) => {
-                const client = new net.Socket();
-                client.connect(port, ipAddress , function() {
-                    console.log('Connected to the TCP server.');
-                });
-                client.write(("2" + " " + url));
-                client.on('data', function(data) {
-                    console.log('Received: ' + data);
-                    if (data.toString() === '2 www.enet.com') {
-                        client.end();
-                        res.status(200).json({ message: "The content contains a malicious URL" });
-                        return;
+            if (websiteAddresses.length > 0) {
+                for (const url of websiteAddresses) {
+                    try {
+                        const result = await checkUrl(url);
+                        if (result.malicious) {
+                            return res.status(410).json({ message: result.message });
+                        }
+                    } catch (error) {
+                        // Handle error
                     }
-                });
-            });
+                }
+            }
         }
-        const post = await userServices.createPost(username, displayName, profilePic, date, content, numlikes, likeby, image, comments , numComments);
+        const post = await userServices.createPost(username, displayName, profilePic, date, content, numlikes, likeby, image, comments, numComments);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -271,7 +277,7 @@ const removeComment = async (req, res) => {
         const postid = req.params.pid;
         const username = req.params.id;
         const commentId = req.body.commentId;
-        const post = await userServices.removeComment(commentId,username, postid);
+        const post = await userServices.removeComment(commentId, username, postid);
         res.status(200).json(post);
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -286,7 +292,7 @@ const updateComment = async (req, res) => {
         const content = req.body.content;
         const post = await userServices.updateComment(username, postid, commentId, content);
         res.status(200).json(post);
-    }catch (error) {
+    } catch (error) {
         res.status(409).json({ message: error.message });
     }
 }

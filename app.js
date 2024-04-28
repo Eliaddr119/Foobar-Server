@@ -17,8 +17,6 @@ addrres.forEach((addr) => {
     client.connect(port, '172.20.182.178', function() {
         client.write(addr);
     });
-    client.on('end', function() {
-    });
 });
 
 import mongoose from "mongoose";
