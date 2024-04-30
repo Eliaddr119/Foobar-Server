@@ -2,6 +2,8 @@ import { url } from 'inspector';
 import userServices from '../services/users.js';
 import jwt from 'jsonwebtoken';
 import net from 'net';
+import customEnv from 'custom-env';
+customEnv.env('local', './config');
 
 const getUser = async (req, res) => {
     try {
@@ -111,26 +113,24 @@ const addFriend = async (req, res) => {
         }
     }
 }
-const checkUrl = (url) => {
+const checkUrl = async (url) => {
     return new Promise((resolve, reject) => {
         const client = new net.Socket();
-        const port = 5555;
-        const ipAddress = '172.20.182.178'
-        client.connect(port, ipAddress, function () {
+        client.connect(process.env.PORT_TCP, process.env.IP_ADDRESS_TCP, function () {
             console.log('Connected to the TCP server.');
             client.write(("2" + " " + url));
         });
-
         client.on('data', function (data) {
             console.log('Received: ' + data);
             client.end();
             if (data.toString() === 'true true') {
+                console.log(data.toString());
                 resolve({ malicious: true, message: "The content contains a malicious URL" });
             } else {
+                console.log(data.toString());
                 resolve({ malicious: false });
             }
         });
-
         client.on('error', function (err) {
             console.log('Error: ' + err);
             reject(err);
@@ -196,16 +196,14 @@ const createPost = async (req, res) => {
         const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
         const websiteAddresses = content.match(urlRegex) || [];
         if (websiteAddresses.length > 0) {
-            if (websiteAddresses.length > 0) {
-                for (const url of websiteAddresses) {
-                    try {
-                        const result = await checkUrl(url);
-                        if (result.malicious) {
-                            return res.status(410).json({ message: result.message });
-                        }
-                    } catch (error) {
-                        // Handle error
+            for (const url of websiteAddresses) {
+                try {
+                    const result = await checkUrl(url);
+                    if (result.malicious) {
+                        return res.status(410).json({ message: result.message });
                     }
+                } catch (error) {
+                    // Handle error
                 }
             }
         }
