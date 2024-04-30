@@ -11,9 +11,10 @@ import customEnv from 'custom-env';
 customEnv.env('local', './config');
 
 import net from 'net';
-const addresses = ["1 www.Dark.com", "1 www.Villai.com", "1 www.Evil.com"]
-//const addresses = ["1 www.DarkDeeds.com", "1 www.VillainVault.com", "1 www.EvilEmpire.com"]
+// const addresses = ["1 www.Dark.com", "1 www.Villai.com", "1 www.Evil.com"]
+// const addresses = ["1 www.DarkDeeds.com", "1 www.VillainVault.com", "1 www.EvilEmpire.com"]
 //const addrres = ["8 1 2", "1 www.net.com", "1 www.site.com", "1 qweqwe"]
+const addresses = process.env.ADDRESSES_TCP_INIT_as.split(',');
 const sendData = (data) => {
     return new Promise((resolve, reject) => {
         const client = new net.Socket();
