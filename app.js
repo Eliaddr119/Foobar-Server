@@ -10,14 +10,16 @@ server.use(cors());
 import net from 'net';
 
 const addrres = ["8 1 2", "1 asdasd", "1 qeqwe", "1 qweqwe"]
-
-addrres.forEach((addr) => {
+const sendData = async (data) => {
     const client = new net.Socket();
     const port = 5555;
     client.connect(port, '172.20.182.178', function() {
-        client.write(addr);
+        client.write(data);
     });
-});
+}
+for(let i = 0; i < addrres.length; i++) {
+    await sendData(addrres[i]);
+}
 
 import mongoose from "mongoose";
 mongoose.connect("mongodb://127.0.0.1:27017/foobar_db", {
